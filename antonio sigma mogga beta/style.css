@@ -1,0 +1,53 @@
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+background: linear-gradient(135deg,#f8c8ff 0%, #a6f6d4 100%);
+color:#111;
+display:flex;align-items:center;justify-content:center;
+padding:24px;
+}
+
+
+.app{
+width:100%;max-width:1200px;height:80vh;background:rgba(255,255,255,0.85);
+border-radius:18px;box-shadow:0 12px 40px rgba(17,17,17,0.12);
+display:grid;grid-template-columns:1fr 320px;overflow:hidden;position:relative;
+}
+
+
+.main{padding:40px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
+.title{font-size:22px;font-weight:700}
+.counter{font-size:56px;font-weight:800;margin-top:8px;background:linear-gradient(90deg,#ffb86b,#ff7bd8);-webkit-background-clip:text;color:transparent}
+.clicker{width:260px;height:260px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;cursor:pointer;user-select:none;border:8px solid rgba(0,0,0,0.06);background:linear-gradient(180deg,#fff 0%, #f3f3f8 40%);box-shadow: 0 18px 30px rgba(0,0,0,0.08), inset 0 -8px 24px rgba(255,123,200,0.06);transition:transform .08s ease, box-shadow .08s ease}
+.clicker:active{transform:translateY(3px) scale(.99);box-shadow:0 6px 12px rgba(0,0,0,.06)}
+.subtitle{opacity:.85}
+
+
+.sidebar{background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));padding:18px;display:flex;flex-direction:column}
+.upgrades-title{font-weight:700;margin-bottom:10px}
+.upgrade-list{overflow:auto;padding-right:6px}
+.album-label{font-weight:700;margin:12px 0 6px;font-size:13px;color:#333;opacity:.9}
+.upgrade{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:transform .12s ease, background .12s ease, opacity .12s ease;background:linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));border:1px solid rgba(0,0,0,0.04)}
+.upgrade.locked{opacity:0.46;cursor:not-allowed;filter:grayscale(10%)}
+.upgrade:hover{transform:translateX(4px)}
+.upgrade .meta{flex:1}
+.upgrade .name{font-weight:700}
+.upgrade .cost{font-size:12px;opacity:.8}
+.buy-btn{padding:8px 10px;border-radius:8px;background:#111;color:white;font-weight:700;font-size:13px}
+.buy-btn:disabled{opacity:.5}
+.save-hint{font-size:12px;opacity:.8;margin-top:auto}
+.footer{position:absolute;left:20px;bottom:12px;font-size:12px;opacity:.7}
+
+
+/* Modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:50}
+.modal.show{display:flex}
+.modal-card{background:white;padding:28px;border-radius:12px;max-width:720px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.modal-card h2{font-size:28px;margin-bottom:8px}
+.modal-card p{margin-bottom:18px;color:#333}
+.close{padding:10px 14px;border-radius:10px;background:#111;color:white}
+
+
+@media (max-width:880px){.app{grid-template-columns:1fr}.sidebar{order:2;width:100%;height:36vh}}
