@@ -1,449 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciador de Despesas</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #f0c27b, #4b1248);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lançador de Dados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    header {
-      background-color: #222;
-      width: 100%;
-      padding: 20px 0;
-      text-align: center;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: gold;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      margin-bottom: 10px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 900px;
-      background-color: rgba(0, 0, 0, 0.45);
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      padding: 20px;
-      margin: 0 10px;
-    }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid #444;
-      margin-bottom: 20px;
-    }
+        h1 {
+            margin-bottom: 30px;
+            color: #333;
+        }
 
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px 0;
-      cursor: pointer;
-      font-weight: bold;
-      color: #ccc;
-      border-bottom: 4px solid transparent;
-      transition: all 0.3s ease;
-      user-select: none;
-    }
+        .dado {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            font-size: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #333;
+            border-radius: 10px;
+            background: white;
+        }
 
-    .tab.active {
-      color: gold;
-      border-bottom-color: gold;
-    }
+        .dado.rolando {
+            animation: rolar 0.5s ease-in-out;
+        }
 
-    .tab-content {
-      display: none;
-    }
+        @keyframes rolar {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+        }
 
-    .tab-content.active {
-      display: block;
-    }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
+        button:hover {
+            background: #0056b3;
+        }
 
-    input {
-      background-color: #fff;
-      color: #000;
-    }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
 
-    button {
-      background-color: #4caf50;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      font-weight: bold;
-    }
+        .historico {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
 
-    button:hover {
-      background-color: #388e3c;
-    }
+        .historico h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #666;
+        }
 
-    button.btn-blue {
-      background-color: #2196F3;
-    }
+        .historico-lista {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-    button.btn-blue:hover {
-      background-color: #1976D2;
-    }
-
-    button.btn-red {
-      background-color: #f44336;
-    }
-
-    button.btn-red:hover {
-      background-color: #d32f2f;
-    }
-
-    #userInfo {
-      color: #ffdf00;
-      text-align: center;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    #saldoAtual {
-      color: #ffdf00;
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .info-text {
-      margin-top: 15px;
-      font-size: 0.9rem;
-      color: #ddd;
-    }
-
-    .stats {
-      color: #ccc;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-      
-      header {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
+        .historico-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 20px;
+            background: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🎲 Lançador de Dados</h1>
+        
+        <div class="dado" id="dado">
+            <span id="numero">6</span>
+        </div>
 
-<header>Gerenciador de Despesas</header>
+        <button id="btnLancar" onclick="lancarDado()">Lançar Dado</button>
 
-<div class="container">
-
-  <div class="tabs">
-    <div class="tab active" data-tab="conta">Conta</div>
-    <div class="tab" data-tab="despesas">Despesas & Saldo</div>
-    <div class="tab" data-tab="calculadora">Calculadora</div>
-  </div>
-
-  <!-- Aba Conta -->
-  <div id="conta" class="tab-content active">
-    <h2>Conta</h2>
-    <div id="loginArea">
-      <input id="username" type="text" placeholder="Digite seu nome de usuário" />
-      <button onclick="fazerLogin()">Entrar (Login Opcional)</button>
+        <div class="historico">
+            <h2>Histórico</h2>
+            <div class="historico-lista" id="historico"></div>
+        </div>
     </div>
-    <div id="userInfo" style="display:none;">
-      <p>Olá, <span id="nomeUsuario"></span>!</p>
-      <button class="btn-blue" onclick="fazerLogout()">Sair</button>
-      <button class="btn-red" onclick="resetarTudo()">Apagar Todos os Dados</button>
-    </div>
-    <p class="info-text">
-      Você pode usar o sistema sem fazer login. Seus dados serão salvos localmente como "visitante".
-      Se fizer login, os dados serão salvos associados ao seu nome e estarão disponíveis mesmo após fechar o navegador.
-    </p>
-  </div>
 
-  <!-- Aba Despesas -->
-  <div id="despesas" class="tab-content">
-    <h2>Despesas & Saldo</h2>
-    <input id="valor" type="number" placeholder="Valor" />
-    <input id="categoria" type="text" placeholder="Categoria" />
-    <button onclick="adicionarDespesa()">Adicionar Despesa</button>
-    <button onclick="adicionarSaldo()">Adicionar Saldo</button>
-    <button class="btn-blue" onclick="calcularLucroDebito()">Calcular Lucro/Débito</button>
-    <button class="btn-blue" onclick="verTotalDespesas()">Ver Despesas</button>
-    <button class="btn-blue" onclick="verTotalPorCategoria()">Total por Categoria</button>
-    <button class="btn-red" onclick="resetarMemoria()">Resetar Memória</button>
-    <button class="btn-red" onclick="resetarSaldo()">Resetar Saldo</button>
-    <p id="saldoAtual">Saldo atual: R$ 0,00</p>
-    <p id="totalDespesas" class="stats">Total de despesas: 0</p>
-  </div>
+    <script>
+        let historico = [];
 
-  <!-- Aba Calculadora -->
-  <div id="calculadora" class="tab-content">
-    <h2>Calculadora</h2>
-    <input id="num1" type="number" placeholder="Número 1" />
-    <input id="num2" type="number" placeholder="Número 2" />
-    <input id="operacao" type="text" placeholder="Operação (+ - * / ^)" />
-    <button onclick="realizarCalculo()">Calcular</button>
-  </div>
-
-</div>
-
-<script>
-  // Controle de abas
-  const tabs = document.querySelectorAll('.tab');
-  const contents = document.querySelectorAll('.tab-content');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.getAttribute('data-tab');
-
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-
-      contents.forEach(c => {
-        c.id === target ? c.classList.add('active') : c.classList.remove('active');
-      });
-    });
-  });
-
-  // Estado do usuário logado (null = não logado)
-  let usuarioAtual = null;
-
-  // Dados atuais (depende do usuário)
-  let listaDespesas = [];
-  let saldo = 0;
-
-  // Chave para dados no localStorage
-  function chaveStorage() {
-    return usuarioAtual ? `dados_${usuarioAtual}` : 'dados_visitante';
-  }
-
-  // Carrega dados do localStorage para o usuário atual (ou visitante)
-  function carregarDados() {
-    const dados = localStorage.getItem(chaveStorage());
-    if (dados) {
-      try {
-        const obj = JSON.parse(dados);
-        listaDespesas = obj.listaDespesas || [];
-        saldo = parseFloat(obj.saldo) || 0;
-      } catch {
-        listaDespesas = [];
-        saldo = 0;
-      }
-    } else {
-      listaDespesas = [];
-      saldo = 0;
-    }
-    atualizarUI();
-  }
-
-  // Salva dados no localStorage para o usuário atual (ou visitante)
-  function salvarDados() {
-    const obj = { listaDespesas, saldo };
-    localStorage.setItem(chaveStorage(), JSON.stringify(obj));
-  }
-
-  // Login (simples, sem senha)
-  function fazerLogin() {
-    const nome = document.getElementById('username').value.trim();
-    if (!nome) {
-      alert('Digite um nome de usuário para entrar.');
-      return;
-    }
-    usuarioAtual = nome;
-    document.getElementById('loginArea').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'block';
-    document.getElementById('nomeUsuario').textContent = usuarioAtual;
-    carregarDados();
-    alert(`Bem-vindo, ${usuarioAtual}!`);
-  }
-
-  // Logout
-  function fazerLogout() {
-    usuarioAtual = null;
-    document.getElementById('loginArea').style.display = 'block';
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('username').value = '';
-    carregarDados();
-    alert('Você saiu da conta. Usando dados de visitante.');
-  }
-
-  // Funções despesas e saldo
-
-  function adicionarDespesa() {
-    const valor = parseFloat(document.getElementById('valor').value);
-    const categoria = document.getElementById('categoria').value.trim();
-    const data = new Date().toLocaleString('pt-BR');
-    if (!valor || !categoria) {
-      alert('Informe o valor e a categoria.');
-      return;
-    }
-    listaDespesas.push({ valor, categoria, data });
-    salvarDados();
-    atualizarUI();
-    document.getElementById('valor').value = '';
-    document.getElementById('categoria').value = '';
-    alert('Despesa adicionada!');
-  }
-
-  function adicionarSaldo() {
-    const valor = parseFloat(document.getElementById('valor').value);
-    if (!valor) {
-      alert('Informe o valor para adicionar ao saldo.');
-      return;
-    }
-    saldo += valor;
-    salvarDados();
-    atualizarUI();
-    document.getElementById('valor').value = '';
-    alert('Saldo atualizado!');
-  }
-
-  function calcularLucroDebito() {
-    const total = listaDespesas.reduce((acc, d) => acc + d.valor, 0);
-    const tipo = saldo >= total ? 'Lucro' : 'Débito';
-    const diferenca = Math.abs(saldo - total);
-    alert(`Você tem ${tipo}: R$ ${diferenca.toFixed(2)}`);
-  }
-
-  function verTotalDespesas() {
-    if (listaDespesas.length === 0) {
-      alert('Nenhuma despesa registrada.');
-      return;
-    }
-    let relatorio = '';
-    listaDespesas.forEach(d => {
-      relatorio += `Categoria: ${d.categoria}, Valor: R$ ${d.valor.toFixed(2)}, Data: ${d.data}\n`;
-    });
-    alert(relatorio);
-  }
-
-  function verTotalPorCategoria() {
-    const categoria = document.getElementById('categoria').value.trim();
-    if (!categoria) {
-      alert('Informe a categoria.');
-      return;
-    }
-    const total = listaDespesas
-      .filter(d => d.categoria.toLowerCase() === categoria.toLowerCase())
-      .reduce((acc, d) => acc + d.valor, 0);
-    alert(`Total da categoria "${categoria}": R$ ${total.toFixed(2)}`);
-  }
-
-  function resetarMemoria() {
-    if (confirm('Deseja realmente apagar todas as despesas?')) {
-      listaDespesas = [];
-      salvarDados();
-      atualizarUI();
-      alert('Despesas apagadas!');
-    }
-  }
-
-  function resetarSaldo() {
-    if (confirm('Deseja realmente zerar o saldo?')) {
-      saldo = 0;
-      salvarDados();
-      atualizarUI();
-      alert('Saldo zerado!');
-    }
-  }
-
-  function resetarTudo() {
-    if (confirm('Deseja realmente apagar TODOS os dados deste usuário? Esta ação não pode ser desfeita!')) {
-      localStorage.removeItem(chaveStorage());
-      listaDespesas = [];
-      saldo = 0;
-      atualizarUI();
-      alert('Todos os dados foram apagados!');
-    }
-  }
-
-  // Calculadora com potenciação
-  function realizarCalculo() {
-    const num1 = parseFloat(document.getElementById('num1').value);
-    const num2 = parseFloat(document.getElementById('num2').value);
-    const operacao = document.getElementById('operacao').value.trim();
-    let resultado;
-
-    if (isNaN(num1) || isNaN(num2)) {
-      alert('Informe os dois números para realizar o cálculo.');
-      return;
-    }
-
-    switch (operacao) {
-      case '+':
-        resultado = num1 + num2;
-        break;
-      case '-':
-        resultado = num1 - num2;
-        break;
-      case '*':
-        resultado = num1 * num2;
-        break;
-      case '/':
-        if (num2 === 0) {
-          alert('Erro: divisão por zero.');
-          return;
+        function lancarDado() {
+            const dado = document.getElementById('dado');
+            const numero = document.getElementById('numero');
+            const btn = document.getElementById('btnLancar');
+            
+            // Desabilitar botão durante animação
+            btn.disabled = true;
+            
+            // Adicionar classe de animação
+            dado.classList.add('rolando');
+            
+            // Simular rolagem rápida
+            let contador = 0;
+            const intervalo = setInterval(() => {
+                numero.textContent = Math.floor(Math.random() * 6) + 1;
+                contador++;
+                
+                if (contador > 10) {
+                    clearInterval(intervalo);
+                    
+                    // Resultado final
+                    const resultado = Math.floor(Math.random() * 6) + 1;
+                    numero.textContent = resultado;
+                    
+                    // Adicionar ao histórico
+                    adicionarHistorico(resultado);
+                    
+                    // Remover animação e reabilitar botão
+                    setTimeout(() => {
+                        dado.classList.remove('rolando');
+                        btn.disabled = false;
+                    }, 500);
+                }
+            }, 50);
         }
-        resultado = num1 / num2;
-        break;
-      case '^':
-        resultado = Math.pow(num1, num2);
-        break;
-      default:
-        alert('Operação inválida. Use +, -, *, / ou ^.');
-        return;
-    }
 
-    alert(`Resultado: ${resultado}`);
-  }
-
-  // Atualiza interface (exibe saldo atual e total de despesas)
-  function atualizarUI() {
-    document.getElementById('saldoAtual').textContent = `Saldo atual: R$ ${saldo.toFixed(2)}`;
-    document.getElementById('totalDespesas').textContent = `Total de despesas: ${listaDespesas.length}`;
-  }
-
-  // Permitir Enter para fazer login
-  document.getElementById('username').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      fazerLogin();
-    }
-  });
-
-  // Ao carregar a página, tenta carregar dados do visitante
-  carregarDados();
-
-</script>
-
+        function adicionarHistorico(valor) {
+            historico.unshift(valor);
+            
+            // Manter apenas os últimos 10 lançamentos
+            if (historico.length > 10) {
+                historico.pop();
+            }
+            
+            // Atualizar display do histórico
+            const historicoDiv = document.getElementById('historico');
+            historicoDiv.innerHTML = '';
+            
+            historico.forEach(num => {
+                const item = document.createElement('div');
+                item.className = 'historico-item';
+                item.textContent = num;
+                historicoDiv.appendChild(item);
+            });
+        }
+    </script>
 </body>
 </html>
