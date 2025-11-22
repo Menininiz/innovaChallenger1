@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator of Epstein</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Calculator of Epstein 🎶</h1>
+
+        <div class="calculator">
+
+            <div class="display" id="display">67</div>
+
+            <div class="buttons">
+
+                <!-- Decoração -->
+                <button class="btn disabled"></button>
+                <button class="btn disabled">8</button>
+                <button class="btn disabled">9</button>
+
+                <button class="btn disabled">4</button>
+                <button class="btn disabled">5</button>
+                <button class="btn disabled"></button>
+
+                <button class="btn disabled">1</button>
+                <button class="btn disabled">2</button>
+                <button class="btn disabled">3</button>
+
+                <button class="btn disabled">0</button>
+                <button class="btn disabled">+</button>
+                <button class="btn disabled">-</button>
+
+                <!-- Botão funcional 67 -->
+                <button class="btn special" id="play67">67</button>
+
+            </div>
+
+        </div>
+
+        <p class="info">Clique no botão “67” para iniciar a sequência musical.</p>
+    </div>
+
+    <script>
+        // Carrega os 17 áudios em ordem
+        const tracks = [];
+        for (let i = 1; i <= 17; i++) {
+            const audio = new Audio(`audios/${i}.mp3`);
+            tracks.push(audio);
+        }
+
+        let current = 0;
+
+        function playSequence() {
+            // Reinicia tudo
+            tracks.forEach(a => {
+                a.pause();
+                a.currentTime = 0;
+            });
+            current = 0;
+
+            function playNext() {
+                if (current >= tracks.length) return; // acabou a playlist
+
+                let audio = tracks[current];
+                audio.play();
+
+                audio.onended = () => {
+                    current++;
+                    playNext();
+                };
+            }
+
+            playNext();
+        }
+
+        // Clique no botão 67
+        document.getElementById("play67").onclick = playSequence;
+    </script>
+
+</body>
+
+</html>
